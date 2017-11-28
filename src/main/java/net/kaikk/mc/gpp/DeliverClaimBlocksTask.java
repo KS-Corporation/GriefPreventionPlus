@@ -34,18 +34,16 @@ class DeliverClaimBlocksTask implements Runnable {
 
     @Override
     public void run() {
-        // if no player specified, this task will create a player-specific task
-        // for each online player, scheduled one tick apart
         if ((this.player == null) && (GriefPreventionPlus.getInstance().config.claims_blocksAccruedPerHour > 0)) {
+            // if no player specified, this task will create a player-specific task
+            // for each online player, scheduled one tick apart
             long i = 0;
             for (final Player onlinePlayer : GriefPreventionPlus.getInstance().getServer().getOnlinePlayers()) {
                 final DeliverClaimBlocksTask newTask = new DeliverClaimBlocksTask(onlinePlayer);
                 GriefPreventionPlus.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(GriefPreventionPlus.getInstance(), newTask, i++);
             }
-        }
-
-        // otherwise, deliver claim blocks to the specified player
-        else {
+        } else {
+            // otherwise, deliver claim blocks to the specified player
             final DataStore dataStore = GriefPreventionPlus.getInstance().getDataStore();
             final PlayerData playerData = dataStore.getPlayerData(this.player.getUniqueId());
 
@@ -82,11 +80,10 @@ class DeliverClaimBlocksTask implements Runnable {
                     // save, including his eventual logout
                     // dataStore.savePlayerData(player.getName(), playerData);
                 }
-            } catch (final IllegalArgumentException e) // can't measure distance
-            // when to/from are
-            // different worlds
-            {
-
+            } catch (final IllegalArgumentException e) {
+                // can't measure distance
+                // when to/from are
+                // different worlds
             } catch (final Exception e) {
                 GriefPreventionPlus.addLogEntry("Problem delivering claim blocks to player " + this.player.getName() + ":");
                 e.printStackTrace();
