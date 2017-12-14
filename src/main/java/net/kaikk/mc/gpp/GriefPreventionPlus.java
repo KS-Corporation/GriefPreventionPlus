@@ -236,6 +236,7 @@ public class GriefPreventionPlus extends JavaPlugin {
 	}
 	
 	public String allowBreak(Player player, Block block, Location location) {
+		if (config.blockBlacklist.contains(block.getType().toString())) return null;
 		final PlayerData playerData = this.getDataStore().getPlayerData(player.getUniqueId());
 		final Claim claim = this.getDataStore().getClaimAt(location, false, playerData.lastClaim);
 
@@ -502,7 +503,7 @@ public class GriefPreventionPlus extends JavaPlugin {
 	}
 	// determines whether creative anti-grief rules apply at a location
 	boolean creativeRulesApply(World world) {
-		return this.creativeRulesApply(world.getName());
+		return world != null && this.creativeRulesApply(world.getName());
 	}	
 
 	public boolean creativeRulesApply(String world) {
